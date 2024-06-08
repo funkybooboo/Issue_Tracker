@@ -11,6 +11,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {issueSchema} from "@/app/validationSchemas";
 import {z} from "zod";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Spinner from "@/app/components/Spinner";
 
 type IssueForm = z.infer<typeof issueSchema>;
 
@@ -20,12 +21,15 @@ const NewIssuePage = () => {
         resolver: zodResolver(issueSchema),
     });
     const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onSubmit = async (data: IssueForm) => {
         try {
+            setIsSubmitting(true);
             await axios.post('/api/issues', data);
             router.push('/issues');
         } catch (error) {
+            setIsSubmitting(false);
             setError("An error occurred while creating the issue");
         }
     }
@@ -35,17 +39,17 @@ const NewIssuePage = () => {
             {error && <Callout.Root color={'red'} className={"mb-5"}><Callout.Text>{error}</Callout.Text></Callout.Root>}
             <form
                 className={"space-y-3"}
-                onSubmit={handleSubmit((data) => onSubmit(data))}
+                onSubmit={handleSubmit(onSubmit)}
             >
                 <TextField.Root placeholder={"Title"} {...register('title')}/>
                 <ErrorMessage>{errors.title?.message}</ErrorMessage>
                 <Controller
                     name={"description"}
                     control={control}
-                    render={({field}) => <SimpleMDE placeholder={"description"} {...field}/>}
+                    render={({field}) => <SimpleMDE placeholder={"Description"} {...field}/>}
                 />
                 <ErrorMessage>{errors.description?.message}</ErrorMessage>
-                <Button>Submit New Issue</Button>
+                <Button disabled={isSubmitting}>Submit New Issue {isSubmitting && <Spinner/>}</Button>
             </form>
         </div>
     );
