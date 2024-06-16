@@ -1,4 +1,4 @@
-import {Table} from '@radix-ui/themes';
+import {Box, Table} from '@radix-ui/themes';
 import prisma from "@/prisma/client";
 import IssueActions from "@/app/issues/IssueActions";
 import {IssueStatusBadge, Link} from "@/app/components";
@@ -9,7 +9,6 @@ const IssuesPage = async () => {
 
     return (
         <div>
-            <IssueActions/>
             <Table.Root variant={"surface"}>
                 <Table.Header>
                     <Table.Row>
@@ -33,6 +32,9 @@ const IssuesPage = async () => {
                     ))}
                 </Table.Body>
             </Table.Root>
+            <Box className={"mt-5"}>
+                <IssueActions/>
+            </Box>
         </div>
     );
 }
