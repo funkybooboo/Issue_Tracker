@@ -1,9 +1,10 @@
+import LatestIssues from "@/app/LatestIssues";
 
 
 const Dashboard = () => {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <LatestIssues></LatestIssues>
     </div>
   );
 }
