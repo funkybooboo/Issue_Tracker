@@ -14,7 +14,7 @@ const AssigneeSelect = ({issue}: {issue: Issue}) => {
     const assignIssue = async (userId: string | null) => {
         if (userId === "none") userId = null;
         try {
-            await axios.patch("/api/issues/" + issue.id, {assigneeId: userId});
+            await axios.patch("/api/issues/" + issue.id, {assignedToUserId: userId});
         }
         catch (e) {
             toast.error("Changes could not be saved");
@@ -47,7 +47,7 @@ const AssigneeSelect = ({issue}: {issue: Issue}) => {
 const useUsers = () => useQuery<User[]>({
     queryKey: ["users"],
     queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000,
+    staleTime: 60 * 1000, // 1 min
     retry: 3,
 });
 
