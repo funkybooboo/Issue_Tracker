@@ -6,6 +6,7 @@ import './theme.config.css';
 import "./globals.css";
 import NavBar from "@/app/NavBar";
 import React from "react";
+import AuthProvider from "@/app/auth/Provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.variable}>
+      <AuthProvider>
         <Theme accentColor="violet" appearance={"light"}>
           <NavBar/>
           <main className={"p-5"}>
@@ -33,6 +35,7 @@ export default function RootLayout({
             </Container>
           </main>
         </Theme>
+      </AuthProvider>
       </body>
     </html>
   );
