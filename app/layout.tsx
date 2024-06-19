@@ -7,6 +7,7 @@ import "./globals.css";
 import NavBar from "@/app/NavBar";
 import React from "react";
 import AuthProvider from "@/app/auth/Provider";
+import QueryClientProvider from "@/app/QueryClientProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -25,18 +26,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.variable}>
-      <AuthProvider>
-        <Theme accentColor="violet" appearance={"light"}>
-          <NavBar/>
-          <main className={"p-5"}>
-            <Container>
-              {children}
-            </Container>
-          </main>
-        </Theme>
-      </AuthProvider>
-      </body>
+        <body className={inter.variable}>
+            <QueryClientProvider>
+                <AuthProvider>
+                    <Theme accentColor="violet" appearance={"light"}>
+                      <NavBar/>
+                      <main className={"p-5"}>
+                          <Container>
+                              {children}
+                          </Container>
+                      </main>
+                    </Theme>
+                </AuthProvider>
+            </QueryClientProvider>
+        </body>
     </html>
   );
 }
