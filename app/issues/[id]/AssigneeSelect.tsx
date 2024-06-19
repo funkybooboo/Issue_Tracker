@@ -9,12 +9,17 @@ import toast, { Toaster } from "react-hot-toast";
 
 const AssigneeSelect = ({issue}: {issue: Issue}) => {
 
-    const {data: users, error, isLoading} = useQuery<User[]>({
-        queryKey: ["users"],
-        queryFn: async () => axios.get("/api/users").then((res) => res.data),
-        staleTime: 60 * 1000,
-        retry: 3,
-    });
+    const {data: users, error, isLoading} = useUsers();
+
+    const assignIssue = async (userId: string | null) => {
+        if (userId === "none") userId = null;
+        try {
+            await axios.patch("/api/issues/" + issue.id, {assigneeId: userId});
+        }
+        catch (e) {
+            toast.error("Changes could not be saved");
+        }
+    }
 
     if (isLoading) return <Skeleton/>;
 
@@ -22,15 +27,7 @@ const AssigneeSelect = ({issue}: {issue: Issue}) => {
 
     return (
         <>
-            <Select.Root defaultValue={issue.assignedToUserId || "none"} onValueChange={async (userId: string | null) => {
-                if (userId === "none") userId = null;
-                try {
-                    await axios.patch("/api/issues/" + issue.id, {assigneeId: userId});
-                }
-                catch (e) {
-                    toast.error("Changes could not be saved");
-                }
-            }}>
+            <Select.Root defaultValue={issue.assignedToUserId || "none"} onValueChange={assignIssue}>
                 <Select.Trigger placeholder={"Assign..."}/>
                 <Select.Content>
                     <Select.Group>
@@ -46,5 +43,12 @@ const AssigneeSelect = ({issue}: {issue: Issue}) => {
         </>
     );
 }
+
+const useUsers = () => useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000,
+    retry: 3,
+});
 
 export default AssigneeSelect;
