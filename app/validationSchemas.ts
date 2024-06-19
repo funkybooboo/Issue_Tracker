@@ -2,8 +2,14 @@ import {z} from "zod";
 
 const issueSchema = z.object({
     title: z.string().min(1, "title is required").max(255),
-    description: z.string().min(1, "description is required"),
-    status: z.optional(z.enum(["IN_PROGRESS", "OPEN", "CLOSED"]))
+    description: z.string().min(1, "description is required").max(65535),
 });
 
-export {issueSchema};
+const patchIssueSchema = z.object({
+    title: z.string().min(1, "title is required").max(255).optional(),
+    description: z.string().min(1, "description is required").max(65535).optional(),
+    assignedToUserId: z.string().min(1).max(255).optional().nullable(),
+
+});
+
+export {issueSchema, patchIssueSchema};
